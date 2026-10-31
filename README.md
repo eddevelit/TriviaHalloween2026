@@ -1,6 +1,6 @@
 # La última función
 
-Trivia web de películas de terror para una fiesta de Halloween. Se juega por turnos en una misma pantalla, sin cuentas ni servidor de datos.
+Trivia web de películas de terror, cultura popular y memes para una fiesta de Halloween. Se juega por turnos en una misma pantalla, sin cuentas ni servidor de datos.
 
 ## Ejecutar
 
@@ -42,11 +42,13 @@ Se usa el ejecutor integrado de Node.js. Las pruebas cubren registro, validez de
 
 ## Contenido y límites
 
-El banco contiene 47 preguntas adaptadas de las 48 propuestas de `preguntas.md`. Las preguntas abiertas se reformularon para tener una sola opción correcta y se precisaron las versiones de películas cuando era necesario. La pregunta sobre la cantidad de películas de Saw cuenta hasta *Saw X* (2023), incluyendo *Spiral*, para mantener una referencia fija.
+El banco contiene 59 preguntas adaptadas de las 60 propuestas de `preguntas.md`: 47 sobre cine de terror y 12 nuevas de cultura popular y memes. Las preguntas abiertas se reformularon para tener una sola opción correcta y se precisaron las versiones de películas cuando era necesario. La pregunta sobre la cantidad de películas de Saw cuenta hasta *Saw X* (2023), incluyendo *Spiral*, para mantener una referencia fija.
+
+Las nuevas propuestas incluyen sus respuestas; se usaron como clave para los memes y sketches sin una fuente independiente localizada. La pregunta subjetiva sobre el mejor personaje de *31 minutos* se adaptó para identificar al reportero de la Nota Verde, [Juan Carlos Bodoque](https://31minutosoficial.cl/codex/juan-carlos-bodoque/). También se corrigió la grafía de [Jenni Rivera, la Diva de la Banda](https://grammymuseum.org/exhibit/jenni-rivera-la-gran-senora/?lang=es).
 
 Queda pendiente «¿Cuál es la película de terror que tiene más secuelas?»: antes de incluirla hay que definir una fecha de corte y si se cuentan remakes, reinicios, cruces y estrenos directos a video. El archivo original se conserva sin cambios.
 
-Para agregar propuestas, adapta también `public/questions.js` con su respuesta y tres distractores; `preguntas.md` no se importa automáticamente porque no contiene respuestas. Ejecuta `npm test` después de editar el banco.
+Para agregar propuestas, adapta también `public/questions.js` con su respuesta y tres distractores; `preguntas.md` no se importa automáticamente. Ejecuta `npm test` después de editar el banco.
 
 Referencias de revisión: [It y el Club de los Perdedores](https://stephenking.com/works/movie/it-part-1-the-losers-club.html), [28 días después](https://www.sonypictures.com/movies/28dayslater), [Evil Dead y el Necronomicón](https://www.regmovies.com/movie-news/everything-you-need-to-know-about-evil-dead), [Pirate Clark en Backrooms (2026)](https://bloody-disgusting.com/movie/3959797/backrooms-behind-the-scenes-photos-reveal-the-alien-romulus-actor-who-played-pirate-clark/), [el ritual de Bring Her Back](https://time.com/7290067/bring-her-back-ending-explained/) y [Monstro Elisasue](https://www.sparknotes.com/film/the-substance/characters/). La referencia de Backrooms (2026) y la respuesta «De gato» para Obsession fueron confirmadas por el organizador.
 

@@ -48,3 +48,53 @@
 [30/10/26, 3:12:26 p.m.] Pao: ¿Cómo se llaman los gemelos de Sinners?
 [30/10/26, 3:14:41 p.m.] Pao: Nombra una de las cosas que hizo la hermanastra fea para conquistar al príncipe
 [30/10/26, 3:15:47 p.m.] Pao: ¿Cómo se llama el monstruo de la sustancia?
+
+
+
+[31/10/26, 2:13:08 p.m.] Marisol Ocampo: ¿Qué le pasó a la tía Hellen?
+
+Se la comieron los gatos
+
+[31/10/26, 2:14:02 p.m.] Marisol Ocampo: Bart no quiero asustarte pero...
+
+El coco está en la casa
+
+[31/10/26, 2:14:55 p.m.] Marisol Ocampo: ¿Cuál es el mejor personaje de 31 minutos?
+
+Juan Carlos Bodoque
+
+[31/10/26, 2:17:11 p.m.] Marisol Ocampo: ¿Cuántas veces han embrujado a la rata alcohólica?
+
+3
+
+[31/10/26, 2:21:39 p.m.] Marisol Ocampo: ¿Quién resultó ser el papá de Yoli en el sketch de Werevertumorro crew?
+
+Saúl Hernández
+
+[31/10/26, 2:23:24 p.m.] Marisol Ocampo: ¿Cómo se llamaba el chihuahua de Aimep3?
+
+-Chiwis
+
+[31/10/26, 2:24:35 p.m.] Marisol Ocampo: Cría labubus y...
+
+Se beberán tu matcha
+
+[31/10/26, 2:25:14 p.m.] Marisol Ocampo: ¿De cuántas babys está enamorado Maluma? 
+
+4
+
+[31/10/26, 2:26:39 p.m.] Marisol Ocampo: ¿Cuántos cuacks resiste el cuerpo humano?
+
+96
+
+[31/10/26, 2:27:29 p.m.] Marisol Ocampo: ¿Cuál es el castigo que recibe Homero en el infierno?
+
+Comer donas infinitas
+
+[31/10/26, 2:32:33 p.m.] Marisol Ocampo: ¿Quién es un naco y estúpido? 
+
+Cepillín
+
+[31/10/26, 2:33:38 p.m.] Marisol Ocampo: ¿Quién era la diva de la banda?
+
+Jenny Rivera
