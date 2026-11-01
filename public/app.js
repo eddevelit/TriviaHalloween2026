@@ -1,9 +1,15 @@
 import { registerPlayer, createGame, beginQuestion, answerQuestion, nextTurn, getCurrentPlayer, getWinners, ROUND_COUNT, MAX_PLAYERS } from './game.js';
 
 const app = document.querySelector('#app');
+const MASCOTS = [
+  { image: 'witch-cat.png', description: 'Gatito con sombrero de bruja y capa morada' },
+  { image: 'vampire-cat.png', description: 'Gatito blanco y negro disfrazado de vampiro' },
+  { image: 'pumpkin-dog.png', description: 'Perrito blanco y negro disfrazado de calabaza' },
+];
 let players = [];
 let game;
 let timer;
+let mascot;
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -37,7 +43,13 @@ function focusScreen() {
 
 function showRegistration(focus = false) {
   clearScreen();
-  const intro = heading('SE ABREN LAS PUERTAS', '¿Te sabes la de miedo?', 'Reúne a tu elenco. Elige bien. Sobrevive a la trivia.');
+  const intro = heading('UNA NOCHE PARA JUGAR EN PANDILLA', '¿Te sabes la de miedo?', 'La luna está llena y la pandilla está lista. ¿Quién sabe más de cine de terror?');
+  const welcome = element('div', 'welcome');
+  const illustration = element('img', 'welcome-illustration');
+  illustration.src = 'assets/halloween-trio.png';
+  illustration.alt = 'Dos gatitos y un perrito disfrazados celebran Halloween bajo la luna llena';
+  illustration.width = 1536;
+  illustration.height = 1024;
   const rules = element('div', 'rules');
   for (const [value, label] of [['15', 'segundos por pregunta'], ['+1', 'punto por acierto'], ['3', 'preguntas por persona']]) {
     const rule = element('div', 'rule');
@@ -102,7 +114,8 @@ function showRegistration(focus = false) {
   start.disabled = players.length < 2;
   roster.append(start, element('p', 'muted small', players.length < 2 ? 'Agrega al menos 2 jugadores para comenzar.' : 'Mismas oportunidades. Preguntas distintas.'));
   ticket.append(formSide, roster);
-  app.append(intro, ticket);
+  welcome.append(intro, illustration);
+  app.append(welcome, ticket);
   if (focus) focusScreen();
 }
 
@@ -134,6 +147,8 @@ function showGame() {
   const layout = element('div', 'game-layout');
   const stage = element('section', 'stage');
   if (game.phase === 'ready') {
+    const choices = MASCOTS.filter((entry) => entry !== mascot);
+    mascot = choices[Math.floor(Math.random() * choices.length)];
     stage.classList.add('ready-stage');
     stage.append(element('span', 'ready-number', String(duration)), element('h2', '', 'Respira. La pregunta viene en camino.'), element('p', 'description', `Tendrás ${duration} segundos desde que pulses el botón. Solo cuenta tu primera respuesta.`), button('Estoy listo →', () => {
       beginQuestion(game);
@@ -192,7 +207,16 @@ function showGame() {
       tick();
     }
   }
-  layout.append(stage, scoreboard());
+  const sidebar = element('div', 'game-sidebar');
+  const companion = element('figure', 'mascot');
+  const portrait = element('img', 'mascot-image');
+  portrait.src = `assets/${mascot.image}`;
+  portrait.alt = mascot.description;
+  portrait.width = 320;
+  portrait.height = 360;
+  companion.append(portrait, element('figcaption', '', 'Tu compañía esta pregunta'));
+  sidebar.append(companion, scoreboard());
+  layout.append(stage, sidebar);
   app.append(layout);
   focusScreen();
 }

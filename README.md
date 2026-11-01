@@ -24,13 +24,15 @@ Abre <http://localhost:4173>. También puedes ejecutar directamente `python3 -m 
 
 Cada sesión selecciona al azar del banco general: tres preguntas normales por jugador (de 6 a 24 en total), más las necesarias para desempatar. Se utilizan primero las preguntas pendientes; si se agota el banco durante los desempates, se vuelve a mezclar para continuar. Una misma ronda de desempate siempre tiene preguntas distintas. Una nueva sesión vuelve a mezclar el banco y puede repetir preguntas anteriores.
 
+El diseño toma los colores y el estilo ilustrado de la imagen de Halloween incluida en el proyecto. El gatito brujo, el gatito vampiro y el perrito calabaza acompañan las preguntas: en cada turno se elige una mascota al azar entre las dos distintas de la anterior. La mascota permanece al revelar la pregunta y mostrar la respuesta, también durante los desempates. En pantallas pequeñas sigue a un costado de la tarjeta y el marcador pasa debajo.
+
 ## Desarrollo y pruebas
 
 ```sh
 npm test
 ```
 
-Se usa el ejecutor integrado de Node.js. Las pruebas cubren registro, validez del banco, turnos, puntuación, límites de 15 y 10 segundos, desempates sucesivos y agotamiento del banco. No se requiere compilación.
+Se usa el ejecutor integrado de Node.js. Las 16 pruebas cubren registro, validez del banco, turnos, puntuación, límites de 15 y 10 segundos, desempates sucesivos, agotamiento del banco y selección y continuidad de las mascotas. No se requiere compilación.
 
 - `public/index.html`: documento de entrada.
 - `public/styles.css`: diseño adaptable y estados visuales.
@@ -39,6 +41,9 @@ Se usa el ejecutor integrado de Node.js. Las pruebas cubren registro, validez de
 - `preguntas.md`: propuestas originales para el banco general.
 - `public/questions.js`: banco jugable adaptado de esas propuestas, con cuatro opciones e índice de la respuesta correcta (`0`–`3`).
 - `test/game.test.js`: pruebas de las reglas.
+- `test/app.test.js`: pruebas de las mascotas en la interfaz.
+- `public/assets/`: ilustración original y tres mascotas con transparencia, servidas localmente.
+- `docs/mascotas.md`: origen de los recursos y prompts de extracción.
 
 ## Contenido y límites
 
