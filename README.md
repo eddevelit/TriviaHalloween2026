@@ -26,13 +26,17 @@ Cada sesión selecciona al azar del banco general: tres preguntas normales por j
 
 El diseño toma los colores y el estilo ilustrado de la imagen de Halloween incluida en el proyecto. El gatito brujo, el gatito vampiro y el perrito calabaza acompañan las preguntas: en cada turno se elige una mascota al azar entre las dos distintas de la anterior. La mascota permanece al revelar la pregunta y mostrar la respuesta, también durante los desempates. En pantallas pequeñas sigue a un costado de la tarjeta y el marcador pasa debajo.
 
+Cada acierto resalta la tarjeta, muestra un distintivo de +1 y hace saltar a la mascota. Los errores y el tiempo agotado muestran un aviso rojo con una sacudida breve de la tarjeta y una reacción de la mascota. Las animaciones respetan la preferencia de movimiento reducido del dispositivo; los avisos permanecen visibles hasta avanzar al siguiente turno.
+
+Al anunciar al ganador, la tarjeta entra con un resplandor breve, confeti y un trofeo; las tres mascotas celebran juntas. La celebración termina automáticamente y deja disponibles el marcador final y los botones para volver a jugar. Con movimiento reducido se muestran el trofeo y las mascotas sin animaciones ni confeti.
+
 ## Desarrollo y pruebas
 
 ```sh
 npm test
 ```
 
-Se usa el ejecutor integrado de Node.js. Las 16 pruebas cubren registro, validez del banco, turnos, puntuación, límites de 15 y 10 segundos, desempates sucesivos, agotamiento del banco y selección y continuidad de las mascotas. No se requiere compilación.
+Se usa el ejecutor integrado de Node.js. Las 18 pruebas cubren registro, validez del banco, turnos, puntuación, límites de 15 y 10 segundos, desempates sucesivos, agotamiento del banco, selección y continuidad de las mascotas, efectos de acierto y error y celebración del ganador. No se requiere compilación.
 
 - `public/index.html`: documento de entrada.
 - `public/styles.css`: diseño adaptable y estados visuales.
@@ -41,7 +45,7 @@ Se usa el ejecutor integrado de Node.js. Las 16 pruebas cubren registro, validez
 - `preguntas.md`: propuestas originales para el banco general.
 - `public/questions.js`: banco jugable adaptado de esas propuestas, con cuatro opciones e índice de la respuesta correcta (`0`–`3`).
 - `test/game.test.js`: pruebas de las reglas.
-- `test/app.test.js`: pruebas de las mascotas en la interfaz.
+- `test/app.test.js`: pruebas de las mascotas y los efectos de respuesta en la interfaz.
 - `public/assets/`: ilustración original y tres mascotas con transparencia, servidas localmente.
 - `docs/mascotas.md`: origen de los recursos y prompts de extracción.
 

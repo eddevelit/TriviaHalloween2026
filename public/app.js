@@ -182,11 +182,16 @@ function showGame() {
     stage.append(options);
     if (game.phase === 'feedback') {
       const { correct, expired } = game.result;
+      layout.classList.add(correct ? 'answer-success' : 'answer-failure');
       seconds.textContent = expired ? '0' : String(Math.max(0, Math.ceil((game.deadline - Date.now()) / 1000)));
       fill.style.width = `${expired ? 0 : Math.max(0, game.deadline - Date.now()) / game.questionTime * 100}%`;
       const feedback = element('div', 'feedback');
       feedback.setAttribute('role', 'status');
-      feedback.append(element('strong', '', correct ? '¡Correcto! Un punto para ti.' : expired ? 'Se acabó el tiempo. Sin punto esta vez.' : 'Esta vez no. No se suman puntos.'), element('p', '', `Respuesta correcta: ${question.options[question.answer]}`));
+      const badge = element('span', 'feedback-badge', correct ? '+1' : expired ? '⌛' : '×');
+      badge.setAttribute('aria-hidden', 'true');
+      const message = element('div');
+      message.append(element('strong', '', correct ? '¡Correcto! Un punto para ti.' : expired ? 'Se acabó el tiempo. Sin punto esta vez.' : 'Esta vez no. No se suman puntos.'), element('p', '', `Respuesta correcta: ${question.options[question.answer]}`));
+      feedback.append(badge, message);
       const nextLabel = game.turn + 1 < game.questions.length ? 'Siguiente turno →' : getWinners(game).length > 1 ? 'Continuar al desempate →' : 'Ver resultados →';
       stage.append(feedback, button(nextLabel, () => {
         nextTurn(game);
@@ -225,7 +230,30 @@ function showResults() {
   const [winner] = getWinners(game);
   app.append(heading('FIN DE LA FUNCIÓN', 'Tenemos superviviente.', 'La mejor memoria de la noche merece el aplauso.'));
   const stage = element('section', 'stage results');
-  stage.append(element('p', 'eyebrow', 'GANADOR DE LA NOCHE'), element('h2', 'winner-name', winner.name), element('p', 'winner-score', `${winner.score} ${winner.score === 1 ? 'punto' : 'puntos'}`));
+  const confetti = element('div', 'victory-confetti');
+  confetti.setAttribute('aria-hidden', 'true');
+  for (let index = 0; index < 18; index++) {
+    const piece = element('span');
+    piece.style.left = `${(index + 0.5) / 18 * 100}%`;
+    piece.style.animationDelay = `${index % 6 * 0.08}s`;
+    confetti.append(piece);
+  }
+  const trophy = element('span', 'victory-trophy', '🏆');
+  trophy.setAttribute('aria-hidden', 'true');
+  const announcement = element('div', 'winner-announcement');
+  announcement.setAttribute('role', 'status');
+  announcement.append(element('p', 'eyebrow', 'GANADOR DE LA NOCHE'), element('h2', 'winner-name', winner.name), element('p', 'winner-score', `${winner.score} ${winner.score === 1 ? 'punto' : 'puntos'}`));
+  const mascots = element('div', 'victory-mascots');
+  mascots.setAttribute('aria-hidden', 'true');
+  for (const entry of MASCOTS) {
+    const portrait = element('img', 'victory-mascot');
+    portrait.src = `assets/${entry.image}`;
+    portrait.alt = '';
+    portrait.width = 140;
+    portrait.height = 150;
+    mascots.append(portrait);
+  }
+  stage.append(confetti, trophy, announcement, mascots);
   const list = element('ol', 'final-scores');
   const sorted = [...game.players].sort((a, b) => b.score - a.score);
   sorted.forEach((player) => {
