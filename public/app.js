@@ -1,6 +1,13 @@
 import { registerPlayer, createGame, beginQuestion, answerQuestion, nextTurn, getCurrentPlayer, getWinners, ROUND_COUNT, MAX_PLAYERS } from './game.js';
 
 const app = document.querySelector('#app');
+const soundToggle = document.querySelector('#sound-toggle');
+const SOUND_NOTES = {
+  success: [523.25, 659.25, 783.99],
+  failure: [261.63, 196, 130.81],
+  timeout: [220, 220, 146.83],
+  victory: [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5],
+};
 const MASCOTS = [
   { image: 'witch-cat.png', description: 'Gatito con sombrero de bruja y capa morada' },
   { image: 'vampire-cat.png', description: 'Gatito blanco y negro disfrazado de vampiro' },
@@ -10,6 +17,75 @@ let players = [];
 let game;
 let timer;
 let mascot;
+let soundEnabled = typeof globalThis.AudioContext === 'function';
+let audioContext;
+let currentSound;
+
+function updateSoundToggle() {
+  soundToggle.textContent = soundToggle.disabled ? 'Sonido no disponible' : soundEnabled ? 'Sonido activado' : 'Sonido silenciado';
+  soundToggle.setAttribute('aria-pressed', String(soundEnabled));
+}
+
+function stopSound() {
+  currentSound?.disconnect();
+  currentSound = null;
+}
+
+function disableSound() {
+  stopSound();
+  soundEnabled = false;
+  soundToggle.disabled = true;
+  updateSoundToggle();
+}
+
+function prepareSound() {
+  if (!soundEnabled) return;
+  try {
+    audioContext ??= new AudioContext();
+    if (audioContext.state !== 'running') audioContext.resume().catch(disableSound);
+  } catch {
+    disableSound();
+  }
+}
+
+function playSound(name) {
+  if (!soundEnabled || audioContext?.state !== 'running') return;
+  stopSound();
+  try {
+    currentSound = audioContext.createGain();
+    currentSound.gain.value = 0.12;
+    currentSound.connect(audioContext.destination);
+    SOUND_NOTES[name].forEach((frequency, index) => {
+      const oscillator = audioContext.createOscillator();
+      const envelope = audioContext.createGain();
+      const start = audioContext.currentTime + 0.02 + index * 0.17;
+      oscillator.type = 'triangle';
+      oscillator.frequency.value = frequency;
+      envelope.gain.setValueAtTime(0, start);
+      envelope.gain.linearRampToValueAtTime(1, start + 0.01);
+      envelope.gain.exponentialRampToValueAtTime(0.001, start + 0.16);
+      oscillator.connect(envelope);
+      envelope.connect(currentSound);
+      oscillator.onended = () => {
+        oscillator.disconnect();
+        envelope.disconnect();
+      };
+      oscillator.start(start);
+      oscillator.stop(start + 0.17);
+    });
+  } catch {
+    disableSound();
+  }
+}
+
+soundToggle.disabled = !soundEnabled;
+updateSoundToggle();
+soundToggle.addEventListener('click', () => {
+  soundEnabled = !soundEnabled;
+  stopSound();
+  updateSoundToggle();
+  prepareSound();
+});
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -21,7 +97,10 @@ function element(tag, className, text) {
 function button(text, action, className = 'button') {
   const node = element('button', className, text);
   node.type = 'button';
-  node.addEventListener('click', action);
+  node.addEventListener('click', () => {
+    prepareSound();
+    action();
+  });
   return node;
 }
 
@@ -34,6 +113,7 @@ function heading(label, title, description) {
 
 function clearScreen() {
   clearInterval(timer);
+  stopSound();
   app.replaceChildren();
 }
 
@@ -133,6 +213,14 @@ function scoreboard() {
   return aside;
 }
 
+function submitAnswer(selected) {
+  if (game.phase !== 'question') return;
+  answerQuestion(game, selected);
+  if (game.phase !== 'feedback') return;
+  showGame();
+  playSound(game.result.correct ? 'success' : game.result.expired ? 'timeout' : 'failure');
+}
+
 function showGame() {
   clearScreen();
   if (game.phase === 'results') return showResults();
@@ -167,10 +255,7 @@ function showGame() {
     stage.append(clock, track, element('h2', 'question', question.text));
     const options = element('div', 'options');
     question.options.forEach((option, index) => {
-      const choice = button('', () => {
-        answerQuestion(game, index);
-        showGame();
-      }, 'option');
+      const choice = button('', () => submitAnswer(index), 'option');
       choice.append(element('span', 'option-letter', 'ABCD'[index]), element('span', '', option));
       if (game.phase === 'feedback') {
         choice.disabled = true;
@@ -204,8 +289,7 @@ function showGame() {
         fill.style.width = `${remaining / game.questionTime * 100}%`;
         clock.classList.toggle('urgent', remaining <= 5000);
         if (!remaining) {
-          answerQuestion(game, null);
-          showGame();
+          submitAnswer(null);
         }
       };
       timer = setInterval(tick, 100);
@@ -270,6 +354,7 @@ function showResults() {
   stage.append(list, actions);
   app.append(stage);
   focusScreen();
+  playSound('victory');
 }
 
 showRegistration();

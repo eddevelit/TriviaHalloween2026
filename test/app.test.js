@@ -4,7 +4,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { createContext, runInContext } from 'node:vm';
 import * as rules from '../public/game.js';
 
-function createScreen(random) {
+function createScreen(random, AudioContext) {
   const nodes = [];
   let tick;
   const document = {
@@ -32,14 +32,45 @@ function createScreen(random) {
     },
   };
   const app = document.createElement('main');
+  const soundToggle = document.createElement('button');
+  soundToggle.id = 'sound-toggle';
   const math = Object.create(Math);
   math.random = random;
-  const context = createContext({ ...rules, document, Math: math, setInterval(callback) { tick = callback; }, clearInterval() {} });
+  const context = createContext({ ...rules, document, AudioContext, Math: math, setInterval(callback) { tick = callback; }, clearInterval() {} });
   const source = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
   runInContext(source.replace(/^import .*;\n/, ''), context);
   runInContext("players = ['Ana', 'Luis']; game = createGame(players, () => 0); showGame();", context);
   const find = (className, node = app) => node.className?.split(' ').includes(className) ? node : node.children.map((child) => find(className, child)).find(Boolean);
-  return { context, find, tick: () => tick(), run: (code) => runInContext(code, context) };
+  return { context, find, soundToggle, tick: () => tick(), run: (code) => runInContext(code, context) };
+}
+
+class FakeAudioContext {
+  state = 'suspended';
+  currentTime = 10;
+  destination = {};
+  oscillators = [];
+  gains = [];
+  resume() { this.state = 'running'; return Promise.resolve(); }
+  createGain() {
+    const gain = {
+      gain: { setValueAtTime() {}, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {} },
+      connect() {},
+      disconnect() { this.disconnected = true; },
+    };
+    this.gains.push(gain);
+    return gain;
+  }
+  createOscillator() {
+    const oscillator = {
+      frequency: {},
+      connect() {},
+      disconnect() { this.disconnected = true; },
+      start(time) { this.startTime = time; },
+      stop(time) { this.stopTime = time; },
+    };
+    this.oscillators.push(oscillator);
+    return oscillator;
+  }
 }
 
 test('mascots stay through answers and timeouts, change each turn, and work in tiebreaks and replays', () => {
@@ -130,5 +161,90 @@ test('victory celebrates the final winner after regular rounds or a tiebreak and
     assert.equal(screen.find('victory-confetti'), undefined);
     assert.equal(screen.find('victory-mascots'), undefined);
     assert.equal(screen.run('game.players[0].score'), 0);
+  }
+});
+
+test('answer sounds unlock on interaction, differ by outcome, and play only for the first answer', () => {
+  const melodies = [];
+  for (const outcome of ['correct', 'wrong', 'timeout']) {
+    const screen = createScreen(() => 0, FakeAudioContext);
+    assert.equal(screen.run('audioContext'), undefined);
+    screen.find('stage').children.at(-1).events.click();
+    const audio = screen.run('audioContext');
+    assert.equal(audio.state, 'running');
+    assert.equal(audio.oscillators.length, 0);
+    const answer = screen.run('game.questions[game.turn].answer');
+    const choice = screen.find('options').children[outcome === 'correct' ? answer : (answer + 1) % 4];
+    if (outcome === 'timeout') {
+      screen.run('game.deadline = Date.now();');
+      screen.tick();
+      screen.tick();
+    } else {
+      choice.events.click();
+      choice.events.click();
+    }
+    assert.equal(audio.oscillators.length, 3);
+    assert.ok(audio.oscillators.every((note) => note.stopTime > note.startTime && note.startTime > audio.currentTime));
+    melodies.push(audio.oscillators.map((note) => note.frequency.value).join(','));
+    audio.oscillators[0].onended();
+    assert.equal(audio.oscillators[0].disconnected, true);
+    assert.equal(audio.gains[1].disconnected, true);
+    const playing = screen.run('currentSound');
+    screen.find('stage').children.at(-1).events.click();
+    assert.equal(playing.disconnected, true);
+  }
+  assert.equal(new Set(melodies).size, 3);
+});
+
+test('sound toggle mutes immediately, stays muted across turns and victory, and can enable sound again', () => {
+  const screen = createScreen(() => 0, FakeAudioContext);
+  screen.soundToggle.events.click();
+  assert.equal(screen.soundToggle['aria-pressed'], 'false');
+  screen.find('stage').children.at(-1).events.click();
+  assert.equal(screen.run('audioContext'), undefined);
+  screen.soundToggle.events.click();
+  assert.equal(screen.soundToggle['aria-pressed'], 'true');
+  const answer = screen.run('game.questions[game.turn].answer');
+  screen.find('options').children[answer].events.click();
+  const audio = screen.run('audioContext');
+  const playing = screen.run('currentSound');
+  screen.soundToggle.events.click();
+  assert.equal(playing.disconnected, true);
+  assert.equal(screen.soundToggle.textContent, 'Sonido silenciado');
+  screen.find('stage').children.at(-1).events.click();
+  screen.find('stage').children.at(-1).events.click();
+  screen.find('options').children[0].events.click();
+  screen.run("game.phase = 'results'; showGame();");
+  assert.equal(audio.oscillators.length, 3);
+  screen.soundToggle.events.click();
+  assert.equal(audio.oscillators.length, 3);
+  screen.run('showGame();');
+  assert.equal(audio.oscillators.length, 9);
+  const fanfare = screen.run('currentSound');
+  screen.find('result-actions').children[0].events.click();
+  assert.equal(fanfare.disconnected, true);
+});
+
+test('missing or failed audio leaves the game playable and marks sound as unavailable', async () => {
+  class ConstructorFailure extends FakeAudioContext {
+    constructor() { super(); throw new Error('No audio device'); }
+  }
+  class ResumeFailure extends FakeAudioContext {
+    resume() { return Promise.reject(new Error('Playback blocked')); }
+  }
+  class PlaybackFailure extends FakeAudioContext {
+    createGain() { throw new Error('Audio device unavailable'); }
+  }
+  for (const AudioContext of [undefined, ConstructorFailure, ResumeFailure, PlaybackFailure]) {
+    const screen = createScreen(() => 0, AudioContext);
+    screen.find('stage').children.at(-1).events.click();
+    await new Promise(setImmediate);
+    const answer = screen.run('game.questions[game.turn].answer');
+    screen.find('options').children[answer].events.click();
+    assert.equal(screen.run('game.players[0].score'), 1);
+    assert.equal(screen.soundToggle.disabled, true);
+    assert.equal(screen.soundToggle['aria-pressed'], 'false');
+    assert.equal(screen.soundToggle.textContent, 'Sonido no disponible');
+    assert.ok(screen.find('feedback'));
   }
 });

@@ -59,6 +59,7 @@ input::placeholder { color: #74677c; }
 .button:disabled { opacity: .5; box-shadow: none; }
 .secondary { background: transparent; color: inherit; border-color: currentColor; box-shadow: none; }
 .secondary:hover:enabled { background: #70428f12; }
+.sound-toggle { display: flex; min-height: 44px; margin-top: 10px; padding: 8px 12px; color: var(--paper); border-color: #fff0ce80; font-size: 12px; }
 .ticket .button:not(.secondary) { background: var(--purple); color: var(--paper); width: 100%; }
 .ticket .button:not(.secondary):hover:enabled { background: #8553a7; }
 .ticket :focus-visible, .stage :focus-visible { outline-color: var(--purple); }
