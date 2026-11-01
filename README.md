@@ -53,11 +53,13 @@ Se usa el ejecutor integrado de Node.js. Las 21 pruebas cubren registro, validez
 
 ## Contenido y límites
 
-El banco contiene 59 preguntas adaptadas de las 60 propuestas de `preguntas.md`: 47 sobre cine de terror y 12 nuevas de cultura popular y memes. Las preguntas abiertas se reformularon para tener una sola opción correcta y se precisaron las versiones de películas cuando era necesario. La pregunta sobre la cantidad de películas de Saw cuenta hasta *Saw X* (2023), incluyendo *Spiral*, para mantener una referencia fija.
+El banco contiene 79 preguntas: 59 adaptadas de las 60 propuestas de `preguntas.md` y 20 adicionales sobre cine de terror. En total hay 67 sobre cine de terror y 12 de cultura popular y memes. Las preguntas abiertas se reformularon para tener una sola opción correcta y se precisaron las versiones de películas cuando era necesario. La pregunta sobre la cantidad de películas de Saw cuenta hasta *Saw X* (2023), incluyendo *Spiral*, para mantener una referencia fija.
 
 Las nuevas propuestas incluyen sus respuestas; se usaron como clave para los memes y sketches sin una fuente independiente localizada. La pregunta subjetiva sobre el mejor personaje de *31 minutos* se adaptó para identificar al reportero de la Nota Verde, [Juan Carlos Bodoque](https://31minutosoficial.cl/codex/juan-carlos-bodoque/). También se corrigió la grafía de [Jenni Rivera, la Diva de la Banda](https://grammymuseum.org/exhibit/jenni-rivera-la-gran-senora/?lang=es).
 
 Queda pendiente «¿Cuál es la película de terror que tiene más secuelas?»: antes de incluirla hay que definir una fecha de corte y si se cuentan remakes, reinicios, cruces y estrenos directos a video. El archivo original se conserva sin cambios.
+
+Las 20 preguntas adicionales se revisaron con las fichas de [Halloween y John Carpenter](https://theofficialjohncarpenter.com/halloween/), [Laurie Strode](https://www.1978halloween.com/synopsis/), [Pesadilla en la calle del infierno](https://www.wescraven.com/film/a-nightmare-on-elm-street/), [Scream (1996)](https://www.paramount.com/movies/scream-1996), [Ghostface](https://www.paramount.com/movies/scream), [Child’s Play](https://catalog.afi.com/Catalog/moviedetails/58582), [Viernes 13](https://catalog.afi.com/Film/56417-FRIDAY-THE13TH), [Alien y Ripley](https://www.20thcenturystudios.com/movies/alien), [la Nostromo](https://www.bfi.org.uk/film/71399b2f-6846-5377-83c6-bf3c21e84965/alien), [El resplandor](https://stephenking.com/works/movie/shining.html), [Tiburón](https://www.universalpicturesathome.com/movies/jaws), [Los otros](https://www.criterion.com/films/33636) y [El sexto sentido](https://d23.com/a-to-z/sixth-sense-the-film/).
 
 Para agregar propuestas, adapta también `public/questions.js` con su respuesta y tres distractores; `preguntas.md` no se importa automáticamente. Ejecuta `npm test` después de editar el banco.
 

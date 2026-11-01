@@ -178,8 +178,9 @@ test('extended tiebreaks use the entire bank before recycling without repeats wi
   const names = Array.from({ length: MAX_PLAYERS }, (_, index) => `Jugador ${index + 1}`);
   const game = createGame(names);
   const seen = new Set(game.questions);
+  const rounds = Math.ceil((questions.length - seen.size) / MAX_PLAYERS) + 1;
   finishRound(game);
-  for (let round = 1; round <= 6; round++) {
+  for (let round = 1; round <= rounds; round++) {
     assert.equal(game.tiebreakRound, round);
     assert.equal(game.questions.length, MAX_PLAYERS);
     assert.equal(new Set(game.questions).size, MAX_PLAYERS);

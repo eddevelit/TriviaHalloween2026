@@ -7,7 +7,7 @@ La última función: trivia de películas de terror en español con HTML, CSS y 
 - `public/index.html` y `public/styles.css`: documento y diseño adaptable.
 - `public/app.js`: interfaz, eventos y temporizador.
 - `public/game.js`: registro, turnos, puntuación y desempates.
-- `public/questions.js`: banco jugable de 59 preguntas.
+- `public/questions.js`: banco jugable de 79 preguntas.
 - `preguntas.md`: propuestas originales; no se importan automáticamente.
 - `test/game.test.js`: pruebas de las reglas.
 - `README.md`: ejecución, funcionamiento y límites.
