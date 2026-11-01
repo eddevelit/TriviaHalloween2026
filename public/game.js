@@ -2,8 +2,8 @@ import { questions } from './questions.js';
 
 export const ROUND_COUNT = 3;
 export const MAX_PLAYERS = 8;
-export const QUESTION_TIME = 15_000;
-export const TIEBREAK_TIME = 10_000;
+export const QUESTION_TIME = 20_000;
+export const TIEBREAK_TIME = 15_000;
 
 export function registerPlayer(players, rawName) {
   const name = rawName.trim().replace(/\s+/g, ' ');

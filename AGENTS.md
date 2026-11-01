@@ -27,9 +27,9 @@ Mantén las reglas en `game.js` y la manipulación del DOM en `app.js`. Usa `tex
 
 ## Reglas de juego y contenido
 
-Registra de 2 a 8 jugadores con nombres distintos. Cada jugador responde tres preguntas por turnos en una sola pantalla, con 15 segundos por pregunta. Solo cuenta la primera respuesta: un acierto suma un punto; error o tiempo agotado suman cero.
+Registra de 2 a 8 jugadores con nombres distintos. Cada jugador responde tres preguntas por turnos en una sola pantalla, con 20 segundos por pregunta. Solo cuenta la primera respuesta: un acierto suma un punto; error o tiempo agotado suman cero.
 
-Al terminar, los líderes empatados juegan una pregunta por persona con 10 segundos, conservando sus puntos. Compara resultados al completar toda la ronda; repite únicamente entre los líderes restantes hasta obtener un ganador. Usa preguntas pendientes antes de reciclar el banco; evita repeticiones dentro de cada ronda especial.
+Al terminar, los líderes empatados juegan una pregunta por persona con 15 segundos, conservando sus puntos. Compara resultados al completar toda la ronda; repite únicamente entre los líderes restantes hasta obtener un ganador. Usa preguntas pendientes antes de reciclar el banco; evita repeticiones dentro de cada ronda especial.
 
 Adapta las propuestas de `preguntas.md` en `public/questions.js`: `text`, cuatro `options` y `answer` como índice de `0` a `3`. Verifica las respuestas y precisa versiones o fechas ambiguas. La sesión vive en memoria y se pierde al recargar.
 

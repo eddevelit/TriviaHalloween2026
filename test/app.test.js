@@ -77,12 +77,14 @@ test('mascots stay through answers and timeouts, change each turn, and work in t
   const screen = createScreen(() => 0);
   let previous;
   for (let turn = 0; turn < 8; turn++) {
+    assert.equal(screen.find('ready-number').textContent, turn < 6 ? '20' : '15');
     const portrait = screen.find('mascot-image');
     assert.notEqual(portrait.src, previous);
     assert.ok(portrait.alt.length > 0);
     assert.ok(existsSync(new URL(`../public/${portrait.src}`, import.meta.url)));
     assert.equal(screen.find('game-sidebar').children[0].className, 'mascot');
     screen.find('stage').children.at(-1).events.click();
+    assert.equal(screen.find('clock').children[1].textContent, turn < 6 ? '20' : '15');
     assert.equal(screen.find('mascot-image').src, portrait.src);
     screen.run(turn === 6
       ? 'answerQuestion(game, game.questions[game.turn].answer); showGame();'

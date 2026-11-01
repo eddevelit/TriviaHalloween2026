@@ -52,20 +52,20 @@ test('correct answers award exactly one point and the first answer is final', ()
   assert.equal(game.players[0].score, 0);
   beginQuestion(game, 1000);
   beginQuestion(game, 2000);
-  assert.equal(game.deadline, 16000);
-  answerQuestion(game, game.questions[0].answer, 15999);
-  answerQuestion(game, game.questions[0].answer, 15999);
+  assert.equal(game.deadline, 21000);
+  answerQuestion(game, game.questions[0].answer, 20999);
+  answerQuestion(game, game.questions[0].answer, 20999);
   assert.equal(game.players[0].score, 1);
   assert.equal(game.phase, 'feedback');
 });
 
-test('wrong, expired, or late answers do not score; the deadline is exactly 15 seconds', () => {
+test('wrong, expired, or late answers do not score; the deadline is exactly 20 seconds', () => {
   for (const mode of ['wrong', 'timeout', 'late']) {
     const game = createGame(['Ana', 'Luis']);
     beginQuestion(game, 1000);
     const correct = game.questions[0].answer;
     const selected = mode === 'timeout' ? null : mode === 'late' ? correct : (correct + 1) % 4;
-    answerQuestion(game, selected, mode === 'wrong' ? 2000 : 16000);
+    answerQuestion(game, selected, mode === 'wrong' ? 2000 : 21000);
     assert.equal(game.players[0].score, 0);
     assert.equal(game.phase, 'feedback');
     assert.equal(game.result.expired, mode !== 'wrong');
@@ -90,7 +90,7 @@ test('players alternate, receive equal questions, and finish with a unique winne
     const player = game.turn % game.players.length;
     turns[player]++;
     beginQuestion(game, 0);
-    answerQuestion(game, player === 0 ? game.questions[game.turn].answer : null, player === 0 ? 1000 : 15000);
+    answerQuestion(game, player === 0 ? game.questions[game.turn].answer : null, player === 0 ? 1000 : 20000);
     nextTurn(game);
   }
   assert.deepEqual(turns, [ROUND_COUNT, ROUND_COUNT, ROUND_COUNT]);
@@ -108,7 +108,7 @@ test('ties include every player with the highest score, including an all-zero ga
   assert.deepEqual(getWinners(game).map((player) => player.name), ['Ana', 'Luis']);
 });
 
-test('a first-place tie starts a 10-second round with only the tied leaders and fresh questions', () => {
+test('a first-place tie starts a 15-second round with only the tied leaders and fresh questions', () => {
   const game = createGame(['Ana', 'Luis', 'Eva']);
   const regularQuestions = [...game.questions];
   finishRound(game, ['Ana', 'Luis']);
@@ -129,14 +129,14 @@ test('a tiebreak finishes every participant turn before declaring a winner', () 
   const game = createGame(['Ana', 'Luis', 'Eva']);
   finishRound(game, ['Ana', 'Luis']);
   beginQuestion(game, 0);
-  answerQuestion(game, game.questions[game.turn].answer, 9999);
-  answerQuestion(game, game.questions[game.turn].answer, 9999);
+  answerQuestion(game, game.questions[game.turn].answer, 14999);
+  answerQuestion(game, game.questions[game.turn].answer, 14999);
   nextTurn(game);
   assert.equal(game.phase, 'ready');
   assert.equal(game.players[0].score, 4);
   assert.equal(getCurrentPlayer(game).name, 'Luis');
   beginQuestion(game, 0);
-  answerQuestion(game, null, 10000);
+  answerQuestion(game, null, 15000);
   nextTurn(game);
   assert.equal(game.phase, 'results');
   assert.deepEqual(getWinners(game), [{ name: 'Ana', score: 4 }]);
@@ -161,15 +161,15 @@ test('repeated ties keep only the remaining leaders, including rounds where all 
   assert.deepEqual(getWinners(game), [{ name: 'Luis', score: 6 }]);
 });
 
-test('tiebreak answers are accepted before 10 seconds and rejected at or after the deadline', () => {
-  for (const elapsed of [9999, 10000, 20000]) {
+test('tiebreak answers are accepted before 15 seconds and rejected at or after the deadline', () => {
+  for (const elapsed of [10000, 14999, 15000, 20000]) {
     const game = createGame(['Ana', 'Luis']);
     finishRound(game);
     beginQuestion(game, 1000);
-    assert.equal(game.deadline, 11000);
+    assert.equal(game.deadline, 16000);
     answerQuestion(game, game.questions[game.turn].answer, 1000 + elapsed);
-    assert.equal(game.players[0].score, elapsed < 10000 ? 1 : 0);
-    assert.equal(game.result.expired, elapsed >= 10000);
+    assert.equal(game.players[0].score, elapsed < 15000 ? 1 : 0);
+    assert.equal(game.result.expired, elapsed >= 15000);
     assert.equal(game.phase, 'feedback');
   }
 });

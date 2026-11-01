@@ -16,10 +16,10 @@ Abre <http://localhost:4173>. También puedes ejecutar directamente `python3 -m 
 
 1. Registra de 2 a 8 jugadores con nombres distintos.
 2. Comienza la sesión. Cada jugador recibe tres preguntas, alternando turnos.
-3. El jugador pulsa **Estoy listo** para revelar su pregunta e iniciar los 15 segundos.
+3. El jugador pulsa **Estoy listo** para revelar su pregunta e iniciar los 20 segundos.
 4. La primera respuesta queda registrada. Un acierto suma un punto; un error o tiempo agotado suma cero.
 5. Avanza al siguiente turno. Al terminar las tres rondas gana quien tenga más puntos.
-6. Si hay empate en el primer lugar, solo esos jugadores participan en una ronda especial: una pregunta por persona y **10 segundos** para responder. Se conservan los puntos y cada acierto sigue sumando uno. Se compara el marcador después de que todos los participantes de la ronda hayan respondido.
+6. Si hay empate en el primer lugar, solo esos jugadores participan en una ronda especial: una pregunta por persona y **15 segundos** para responder. Se conservan los puntos y cada acierto sigue sumando uno. Se compara el marcador después de que todos los participantes de la ronda hayan respondido.
 7. Si el empate continúa, se juega otra ronda especial únicamente entre quienes sigan empatados arriba, hasta obtener un ganador.
 
 Cada sesión selecciona al azar del banco general: tres preguntas normales por jugador (de 6 a 24 en total), más las necesarias para desempatar. Se utilizan primero las preguntas pendientes; si se agota el banco durante los desempates, se vuelve a mezclar para continuar. Una misma ronda de desempate siempre tiene preguntas distintas. Una nueva sesión vuelve a mezclar el banco y puede repetir preguntas anteriores.
@@ -38,7 +38,7 @@ Los aciertos, errores, el tiempo agotado y la victoria tienen sonidos breves dis
 npm test
 ```
 
-Se usa el ejecutor integrado de Node.js. Las 21 pruebas cubren registro, validez del banco, turnos, puntuación, límites de 15 y 10 segundos, desempates sucesivos, agotamiento del banco, selección y continuidad de las mascotas, efectos de acierto y error, celebración del ganador, reproducción de sonidos, silencio y fallos de audio. No se requiere compilación.
+Se usa el ejecutor integrado de Node.js. Las 21 pruebas cubren registro, validez del banco, turnos, puntuación, límites de 20 y 15 segundos, desempates sucesivos, agotamiento del banco, selección y continuidad de las mascotas, efectos de acierto y error, celebración del ganador, reproducción de sonidos, silencio y fallos de audio. No se requiere compilación.
 
 - `public/index.html`: documento de entrada.
 - `public/styles.css`: diseño adaptable y estados visuales.

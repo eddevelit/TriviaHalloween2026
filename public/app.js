@@ -1,4 +1,4 @@
-import { registerPlayer, createGame, beginQuestion, answerQuestion, nextTurn, getCurrentPlayer, getWinners, ROUND_COUNT, MAX_PLAYERS } from './game.js';
+import { registerPlayer, createGame, beginQuestion, answerQuestion, nextTurn, getCurrentPlayer, getWinners, ROUND_COUNT, MAX_PLAYERS, QUESTION_TIME, TIEBREAK_TIME } from './game.js';
 
 const app = document.querySelector('#app');
 const soundToggle = document.querySelector('#sound-toggle');
@@ -131,12 +131,12 @@ function showRegistration(focus = false) {
   illustration.width = 1536;
   illustration.height = 1024;
   const rules = element('div', 'rules');
-  for (const [value, label] of [['15', 'segundos por pregunta'], ['+1', 'punto por acierto'], ['3', 'preguntas por persona']]) {
+  for (const [value, label] of [[String(QUESTION_TIME / 1000), 'segundos por pregunta'], ['+1', 'punto por acierto'], ['3', 'preguntas por persona']]) {
     const rule = element('div', 'rule');
     rule.append(element('strong', '', value), element('span', '', label));
     rules.append(rule);
   }
-  intro.append(rules, element('p', 'muted small', '¿Empate al final? Solo los líderes juegan una ronda especial de 10 segundos por pregunta.'));
+  intro.append(rules, element('p', 'muted small', `¿Empate al final? Solo los líderes juegan una ronda especial de ${TIEBREAK_TIME / 1000} segundos por pregunta.`));
   const ticket = element('section', 'ticket');
   const formSide = element('div', 'ticket-form');
   formSide.append(element('p', 'eyebrow', 'TU ENTRADA AL TERROR'), element('h2', '', '¿Quién se atreve a jugar?'));
